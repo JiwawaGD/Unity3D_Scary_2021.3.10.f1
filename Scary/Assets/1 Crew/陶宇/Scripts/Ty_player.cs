@@ -3,18 +3,26 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Ty_player : MonoBehaviour
 {
-    float f_speed;
-    float f_deltatime;
+    //  Can be setted by player
+    float f_UDSensitivity;
+    float f_RLSensitivity;
 
-    readonly Vector3 v3_zero;
-    Vector3 v3_pos;
-    Vector3 v3_target;
+    //  Const value
+    float f_moveSpeed;
+    float f_deltatime;
+    float f_lookRotation;
+
+    Vector3 v3_zero;
+    Vector3 v3_moveValue;
+    Vector3 v3_movePos;
 
     Rigidbody rig;
+    GameObject cam;
 
     void Awake()
     {
         rig = GetComponent<Rigidbody>();
+        cam = GameObject.Find("Player Camera");
     }
 
     void Start()
@@ -24,24 +32,45 @@ public class Ty_player : MonoBehaviour
 
     void Init()
     {
-        f_speed = 180;
-        f_deltatime = Time.deltaTime;
+        f_moveSpeed = 180;
+        f_UDSensitivity = 180;
+        f_RLSensitivity = 140;
+
+        f_deltatime = GlobalDeclare.f_deltaTime;
+        v3_zero = GlobalDeclare.v3_zero;
     }
 
     void FixedUpdate()
     {
         Move();
+        View();
     }
 
+    //  View Function
+    void View()
+    {
+        //  左右轉
+        transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * f_RLSensitivity * f_deltatime);
+
+        f_lookRotation += Input.GetAxis("Mouse Y") * f_UDSensitivity * f_deltatime;
+        f_lookRotation = Mathf.Clamp(f_lookRotation, -75, 75);
+
+        //  上下轉
+        cam.transform.localEulerAngles = -Vector3.right * f_lookRotation;
+    }
+
+    //  Move Function
     void Move()
     {
-        v3_target = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        v3_moveValue = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
-        v3_pos.x = v3_target.x * f_deltatime * f_speed;
-        v3_pos.z = v3_target.z * f_deltatime * f_speed;
+        v3_movePos.x = v3_moveValue.x * f_deltatime * f_moveSpeed;
+        v3_movePos.z = v3_moveValue.z * f_deltatime * f_moveSpeed;
 
-        if (v3_pos != v3_zero)
-            rig.velocity = v3_pos;
+        v3_movePos = transform.right * v3_movePos.x + transform.forward * v3_movePos.z;
+
+        if (v3_movePos != v3_zero)
+            rig.velocity = v3_movePos;
         else
             rig.velocity = v3_zero;
     }
