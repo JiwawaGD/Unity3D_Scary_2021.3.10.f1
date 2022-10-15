@@ -11,13 +11,20 @@ public class Ty_player : MonoBehaviour
     float f_moveSpeed;
     float f_deltatime;
     float f_lookRotation;
+    float f_rayLength;
+
+    int i_InteractiveLayer;
+
+    //  Cursor Show
+    bool b_isShow;
 
     Vector3 v3_zero;
     Vector3 v3_moveValue;
     Vector3 v3_movePos;
 
     Rigidbody rig;
-    GameObject cam;
+    [SerializeField] GameObject cam;
+    RaycastHit hit;
 
     void Awake()
     {
@@ -27,23 +34,52 @@ public class Ty_player : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = false;
+
         Init();
     }
 
-    void Init()
+    void Update()
     {
-        f_moveSpeed = 180;
-        f_UDSensitivity = 180;
-        f_RLSensitivity = 140;
-
-        f_deltatime = GlobalDeclare.f_deltaTime;
-        v3_zero = GlobalDeclare.v3_zero;
+        if (Input.GetKeyDown(KeyCode.F6))
+            SetCursor();
     }
 
     void FixedUpdate()
     {
         Move();
         View();
+        RayHitCheck();
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(cam.transform.position, cam.transform.position + (cam.transform.forward * f_rayLength));
+    }
+
+    //  Value Initialize
+    void Init()
+    {
+        f_moveSpeed = 180;
+        f_UDSensitivity = 120;
+        f_RLSensitivity = 80;
+        f_rayLength = 2;
+
+        i_InteractiveLayer = 10;
+
+        b_isShow = false;
+
+        f_deltatime = GlobalDeclare.f_deltaTime;
+        v3_zero = GlobalDeclare.v3_zero;
+    }
+
+    //  Cursor State
+    void SetCursor()
+    {
+        b_isShow = !b_isShow;
+
+        Cursor.visible = b_isShow;
     }
 
     //  View Function
@@ -73,5 +109,20 @@ public class Ty_player : MonoBehaviour
             rig.velocity = v3_movePos;
         else
             rig.velocity = v3_zero;
+    }
+
+    //  Ray check for item interact
+    void RayHitCheck()
+    {
+        if (Physics.Raycast(cam.transform.position,     // Origin 
+            cam.transform.forward,                      // Direction
+            out hit,                                    // RaycastHit
+            f_rayLength))                               // RayLength
+        {
+            if (hit.transform.gameObject.layer == i_InteractiveLayer)
+            {
+                Debug.Log("Hit");
+            }
+        }
     }
 }
