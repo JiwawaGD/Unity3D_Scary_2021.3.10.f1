@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace WEI
 {
+    /// <summary>
+    /// 對話框偵測系統
+    /// </summary>
     public class SystemDetectConversation : MonoBehaviour
     {
         public GameObject button;
