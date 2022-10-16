@@ -22,8 +22,8 @@ public class Ty_player : MonoBehaviour
     Vector3 v3_moveValue;
     Vector3 v3_movePos;
 
-    Rigidbody rig;
     [SerializeField] GameObject cam;
+    Rigidbody rig;
     RaycastHit hit;
 
     void Awake()
@@ -121,7 +121,7 @@ public class Ty_player : MonoBehaviour
         {
             if (hit.transform.gameObject.layer == i_InteractiveLayer)
             {
-                Debug.Log("Hit");
+                hit.transform.gameObject.GetComponent<Outline>().OutlineWidth = 10;
             }
         }
     }
