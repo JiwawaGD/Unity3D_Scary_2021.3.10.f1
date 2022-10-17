@@ -33,8 +33,8 @@ public class PlayerController : MonoBehaviour
     void Init()
     {
         f_moveSpeed = 180;
-        f_UDSensitivity = 120;
-        f_RLSensitivity = 80;
+        f_UDSensitivity = 140;
+        f_RLSensitivity = 100;
 
         f_deltatime = Time.deltaTime;
         v3_zero = Vector3.zero;

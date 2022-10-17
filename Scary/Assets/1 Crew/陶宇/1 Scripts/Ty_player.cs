@@ -70,8 +70,8 @@ public class Ty_player : MonoBehaviour
 
         b_isShow = false;
 
-        f_deltatime = GlobalDeclare.f_deltaTime;
-        v3_zero = GlobalDeclare.v3_zero;
+        f_deltatime = Time.deltaTime;
+        v3_zero = Vector3.zero;
     }
 
     //  Cursor State
@@ -119,9 +119,14 @@ public class Ty_player : MonoBehaviour
             out hit,                                    // RaycastHit
             f_rayLength))                               // RayLength
         {
+            Ty_ItemView item = hit.transform.gameObject.GetComponent<Ty_ItemView>();
+
             if (hit.transform.gameObject.layer == i_InteractiveLayer)
             {
-                hit.transform.gameObject.GetComponent<Outline>().OutlineWidth = 10;
+                item.b_isOutline = true;
+
+                if (Input.GetKeyDown(KeyCode.E))
+                    item.ItemInteract(item.itemMessage);
             }
         }
     }
