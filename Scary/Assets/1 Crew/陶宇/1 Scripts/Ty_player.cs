@@ -34,9 +34,8 @@ public class Ty_player : MonoBehaviour
 
     void Start()
     {
-        Cursor.visible = false;
-
         Init();
+        SetCursor();
     }
 
     void Update()
@@ -68,7 +67,7 @@ public class Ty_player : MonoBehaviour
 
         i_InteractiveLayer = 10;
 
-        b_isShow = false;
+        b_isShow = true;
 
         f_deltatime = Time.deltaTime;
         v3_zero = Vector3.zero;
@@ -78,6 +77,11 @@ public class Ty_player : MonoBehaviour
     void SetCursor()
     {
         b_isShow = !b_isShow;
+
+        if (b_isShow)
+            Cursor.lockState = CursorLockMode.None;
+        else
+            Cursor.lockState = CursorLockMode.Locked;
 
         Cursor.visible = b_isShow;
     }
@@ -123,7 +127,7 @@ public class Ty_player : MonoBehaviour
 
             if (hit.transform.gameObject.layer == i_InteractiveLayer)
             {
-                item.b_isOutline = true;
+                item.outline.OutlineWidth = 10;
 
                 if (Input.GetKeyDown(KeyCode.E))
                     item.ItemInteract(item.itemMessage);
