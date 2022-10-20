@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] GameObject cam;
+
     //  Can be setted by player
     float f_UDSensitivity;
     float f_RLSensitivity;
@@ -11,13 +13,18 @@ public class PlayerController : MonoBehaviour
     float f_moveSpeed;
     float f_deltatime;
     float f_lookRotation;
+    float f_rayLength;
+
+    int i_InteractiveLayer;
+
+    bool b_CursorShow;
 
     Vector3 v3_zero;
     Vector3 v3_moveValue;
     Vector3 v3_movePos;
 
     Rigidbody rig;
-    GameObject cam;
+    RaycastHit hit;
 
     void Awake()
     {
@@ -28,16 +35,13 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         Init();
+        SetCursor();
     }
 
-    void Init()
+    void OnDrawGizmos()
     {
-        f_moveSpeed = 180;
-        f_UDSensitivity = 140;
-        f_RLSensitivity = 100;
-
-        f_deltatime = Time.deltaTime;
-        v3_zero = Vector3.zero;
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(cam.transform.position, cam.transform.position + (cam.transform.forward * f_rayLength));
     }
 
     void FixedUpdate()
@@ -46,7 +50,31 @@ public class PlayerController : MonoBehaviour
         View();
     }
 
-    //  View Function
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F6))
+            SetCursor();
+
+        RayHitCheck();
+    }
+
+    //  Initialize everything
+    void Init()
+    {
+        f_moveSpeed = 180;
+        f_UDSensitivity = 120;
+        f_RLSensitivity = 80;
+        f_rayLength = 2;
+
+        i_InteractiveLayer = 10;
+
+        b_CursorShow = true;
+
+        f_deltatime = Time.deltaTime;
+        v3_zero = Vector3.zero;
+    }
+
+    //  View
     void View()
     {
         //  ¥ª¥kÂà
@@ -59,7 +87,7 @@ public class PlayerController : MonoBehaviour
         cam.transform.localEulerAngles = -Vector3.right * f_lookRotation;
     }
 
-    //  Move Function
+    //  Move
     void Move()
     {
         v3_moveValue = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
@@ -73,5 +101,38 @@ public class PlayerController : MonoBehaviour
             rig.velocity = v3_movePos;
         else
             rig.velocity = v3_zero;
+    }
+
+    //  Set cursor state
+    void SetCursor()
+    {
+        b_CursorShow = !b_CursorShow;
+
+        if (b_CursorShow)
+            Cursor.lockState = CursorLockMode.None;
+        else
+            Cursor.lockState = CursorLockMode.Locked;
+
+        Cursor.visible = b_CursorShow;
+    }
+
+    //  Ray check for item interact
+    void RayHitCheck()
+    {
+        if (Physics.Raycast(cam.transform.position,     // Origin 
+            cam.transform.forward,                      // Direction
+            out hit,                                    // RaycastHit
+            f_rayLength))                               // RayLength
+        {
+            ItemController item = hit.transform.gameObject.GetComponent<ItemController>();
+
+            if (hit.transform.gameObject.layer == i_InteractiveLayer && item.b_isActive)
+            {
+                item.LightOn(true);
+
+                if (Input.GetKeyDown(KeyCode.E))
+                    item.SendGameEvent();
+            }
+        }
     }
 }

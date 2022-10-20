@@ -1,37 +1,35 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Outline))]
 public class ItemController : MonoBehaviour
 {
-    [Header("遊戲事件")]
-    public GlobalDeclare.GameEvent gameEvent;
+    [Header("遊戲事件")] public GameEventID eventID;
 
-    [HideInInspector]
-    public bool b_isOutline;
-
-    Outline outline;
     GameManager gameManager;
+
+    public bool b_isActive;
+    [HideInInspector] public bool b_isOutline;
+    [HideInInspector] public Outline outline;
 
     void Awake()
     {
         outline = GetComponent<Outline>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void Start()
     {
-        if (gameManager = null)
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        outline.OutlineMode = Outline.Mode.OutlineVisible;
+        outline.OutlineWidth = 0;
     }
 
-    void Update()
+    public void LightOn(bool _open)
     {
-        if (b_isOutline)
-            outline.OutlineWidth = 10;
-        else
-            outline.OutlineWidth = 0;
+        outline.OutlineWidth = _open ? 10 : 0;
     }
 
     public void SendGameEvent()
     {
-        gameManager.GameEvent(gameEvent);
+        gameManager.GameEvent(eventID);
     }
 }

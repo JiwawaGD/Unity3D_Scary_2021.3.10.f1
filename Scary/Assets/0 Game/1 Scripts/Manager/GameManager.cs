@@ -4,7 +4,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] [Header("玩家")] PlayerController player;
 
-    [SerializeField] [Header("室內傳送點")] Transform t_indoorPos;
+    [SerializeField] [Header("戶內傳送點")] Transform t_indoorPos;
+
+    [SerializeField] [Header("所有可互動物件")] ItemController[] items;
 
     Transform t_player;
 
@@ -15,17 +17,14 @@ public class GameManager : MonoBehaviour
 
     void Init()
     {
-        if (player = null)
-            player = GameObject.Find("player").GetComponent<PlayerController>();
-
         t_player = player.transform;
     }
 
-    public void GameEvent(GlobalDeclare.GameEvent _gameEvent)
+    public void GameEvent(GameEventID _eventID)
     {
-        switch (_gameEvent)
+        switch (_eventID)
         {
-            case GlobalDeclare.GameEvent.S1Move_To_Indoor:
+            case GameEventID.S1Move_To_Indoor:
                 t_player.position = t_indoorPos.position;
                 break;
         }
