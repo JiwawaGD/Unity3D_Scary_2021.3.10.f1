@@ -10,5 +10,8 @@ public class GlobalDeclare
 
 public enum GameEventID
 {
-    S1Move_To_Indoor,
+    // S1 : Scene one
+    S1_Move_To_Indoor,
+    S1_Move_To_OutDoor,
+    S1_RollingDoor_Up,
 }
