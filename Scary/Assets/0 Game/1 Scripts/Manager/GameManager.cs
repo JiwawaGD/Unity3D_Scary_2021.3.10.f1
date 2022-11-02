@@ -22,6 +22,11 @@ public class GameManager : MonoBehaviour
         t_player = player.transform;
     }
 
+    public void StoryEvent()
+    {
+
+    }
+
     public void GameEvent(GameEventID _eventID)
     {
         switch (_eventID)

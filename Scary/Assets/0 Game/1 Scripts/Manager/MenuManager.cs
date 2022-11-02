@@ -2,9 +2,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Menu : MonoBehaviour
+public class MenuManager : MonoBehaviour
 {
-    readonly string s_nextScene = "2 ªüÀ¨®a";
+    readonly string s_nextScene = "2_GrandmaHouse";
 
     AsyncOperation async = null;
 

@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     float f_rayLength;
 
     int i_InteractiveLayer;
+    int i_StoryColliderLayer;
 
     bool b_CursorShow;
 
@@ -25,6 +26,9 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody rig;
     RaycastHit hit;
+
+    ItemController current_Item;
+    ItemController last_Item;
 
     void Awake()
     {
@@ -56,6 +60,16 @@ public class PlayerController : MonoBehaviour
             SetCursor();
 
         RayHitCheck();
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.layer == i_StoryColliderLayer)
+        {
+            StoryController storyController = col.gameObject.GetComponent<StoryController>();
+
+            storyController.SendStoryMsg();
+        }
     }
 
     //  Initialize everything
@@ -124,15 +138,22 @@ public class PlayerController : MonoBehaviour
             out hit,                                    // RaycastHit
             f_rayLength))                               // RayLength
         {
-            ItemController item = hit.transform.gameObject.GetComponent<ItemController>();
+            current_Item = hit.transform.gameObject.GetComponent<ItemController>();
 
-            if (hit.transform.gameObject.layer == i_InteractiveLayer && item.b_isActive)
+            if (hit.transform.gameObject.layer == i_InteractiveLayer && current_Item.b_isActive)
             {
-                item.LightOn(true);
+                current_Item.LightOn(true);
+
+                last_Item = current_Item;
 
                 if (Input.GetKeyDown(KeyCode.E))
-                    item.SendGameEvent();
+                    current_Item.SendGameEvent();
             }
+        }
+        else
+        {
+            if (last_Item)
+                last_Item.LightOn(false);
         }
     }
 }
