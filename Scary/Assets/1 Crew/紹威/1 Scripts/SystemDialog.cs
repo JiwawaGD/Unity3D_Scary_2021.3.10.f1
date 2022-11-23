@@ -15,7 +15,6 @@ namespace WEI
         #region 欄位
         [Header("UI")]
         public TMP_Text textLable;
-        public Image faceImage;
 
         [Header("文字文件")]
         public TextAsset textFile;
@@ -25,9 +24,6 @@ namespace WEI
         public float txetSpeed;
 
         bool textFinished;
-
-        [Header("人物")]
-        public Sprite face01, face02;
 
         //定義一個列表
         List<string> textList = new List<string>();
@@ -104,16 +100,18 @@ namespace WEI
         {
             textFinished = false;
             textLable.text = "";    // 清空一開始的文字列
-            //switch (textList[index])
-            //{
-            //    case "A":
-            //        faceImage.sprite = face01;
-            //        index++;
-            //        break;
-            //    case "B":
-            //        faceImage.sprite = face02;
-            //        index++;
-            //        break;}
+
+            switch (textList[index])
+            {
+                case "A":
+                    //faceImage.sprite = face01;
+                    index++;
+                    break;
+                case "B":
+                    //faceImage.sprite = face02;
+                    index++;
+                    break;
+            }
             for (int i = 0; i < textList[index].Length; i++)
             {
                 textLable.text += textList[index][i];

@@ -42,6 +42,9 @@ public class PlayerController : MonoBehaviour
         SetCursor();
     }
 
+    /// <summary>
+    /// ®g½u
+    /// </summary>
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
