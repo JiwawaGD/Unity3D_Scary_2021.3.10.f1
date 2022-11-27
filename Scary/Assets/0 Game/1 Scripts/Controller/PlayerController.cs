@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] GameObject cam;
+    public GameObject cam;
 
     //  Can be setted by player
     float f_UDSensitivity;
