@@ -27,4 +27,5 @@ public enum GameEventID
     S1_Move_To_Indoor,
     S1_Move_To_OutDoor,
     S1_RollingDoor_Up,
+    S1_RollingDoor_Jump,
 }
